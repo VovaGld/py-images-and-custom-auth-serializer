@@ -9,8 +9,10 @@ from django.utils.text import slugify
 
 
 def create_custom_path(instance, filename):
-    filename = (f"{slugify(instance.title)}-{uuid.uuid4()}"
-                + pathlib.Path(filename).suffix)
+    filename = (
+        f"{slugify(instance.title)}-{uuid.uuid4()}"
+        + pathlib.Path(filename).suffix
+    )
     return pathlib.Path("uploads/movies/") / pathlib.Path(filename)
 
 
@@ -76,7 +78,8 @@ class MovieSession(models.Model):
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
     )
 
     def __str__(self):
@@ -91,7 +94,9 @@ class Ticket(models.Model):
         MovieSession, on_delete=models.CASCADE, related_name="tickets"
     )
     order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name="tickets"
+        Order,
+        on_delete=models.CASCADE,
+        related_name="tickets"
     )
     row = models.IntegerField()
     seat = models.IntegerField()
@@ -107,9 +112,9 @@ class Ticket(models.Model):
                 raise error_to_raise(
                     {
                         ticket_attr_name: f"{ticket_attr_name} "
-                                          f"number must be in available range: "
-                                          f"(1, {cinema_hall_attr_name}): "
-                                          f"(1, {count_attrs})"
+                        f"number must be in available range: "
+                        f"(1, {cinema_hall_attr_name}): "
+                        f"(1, {count_attrs})"
                     }
                 )
 
@@ -122,11 +127,11 @@ class Ticket(models.Model):
         )
 
     def save(
-            self,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None,
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
     ):
         self.full_clean()
         return super(Ticket, self).save(
@@ -135,7 +140,8 @@ class Ticket(models.Model):
 
     def __str__(self):
         return (
-            f"{str(self.movie_session)} (row: {self.row}, seat: {self.seat})"
+            f"{str(self.movie_session)} "
+            f"(row: {self.row}, seat: {self.seat})"
         )
 
     class Meta:
